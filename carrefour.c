@@ -711,9 +711,12 @@ static void sig_handler(int signal) {
 #include <sched.h>
 #include <linux/unistd.h>
 #include <sys/mman.h>
+#if !defined(_GNU_SOURCE) || !defined(__GLIBC__) || __GLIBC__ < 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ < 30)
+#include <sys/syscall.h>
 static pid_t gettid(void) {
       return syscall(__NR_gettid);
 }
+#endif
 
 void set_affinity(int cpu_id) {
    int tid = gettid();
